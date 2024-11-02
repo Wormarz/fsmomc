@@ -1,7 +1,9 @@
 #include "fsmomc.h"
+#include "version.h"
 #include <string.h>
 
 /* state machine start */
+const char version[] = "Ver: "FSMOMC_VERSION_STR; /* version */
 
 static struct working_state states[MAX_SM_NUMS];
 static struct working_state *cur_stat = &states[0];
@@ -124,5 +126,10 @@ struct working_state* trans_stat(struct working_state *from, char *to)
     }
 
     return NULL;
+}
+
+uint32_t fsmomc_version(void)
+{
+    return FSMOMC_VERSION;
 }
 /* state machine end */
