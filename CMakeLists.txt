@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.16)
 
 project(fsmomc)
 
-aux_source_directory(${CMAKE_CURRENT_LIST_DIR}/source source_files)
+aux_source_directory(${CMAKE_CURRENT_LIST_DIR}/source SRC_FILES)
 
-add_library(${PROJECT_NAME} STATIC ${source_files})
+add_library(${PROJECT_NAME} STATIC ${SRC_FILES})
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC
