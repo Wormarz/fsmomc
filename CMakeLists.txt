@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(fsmomc VERSION 0.1.0 LANGUAGES C)
+project(fsmomc VERSION 0.1.0)
 
 aux_source_directory(${CMAKE_CURRENT_LIST_DIR}/source SRC_FILES)
 
@@ -17,3 +17,6 @@ configure_file (
     "${PROJECT_SOURCE_DIR}/include/version.h.in"
     "${PROJECT_BINARY_DIR}/include/version.h"
 )
+
+enable_testing()
+add_subdirectory(test)
