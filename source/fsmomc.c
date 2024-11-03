@@ -132,4 +132,9 @@ uint32_t fsmomc_version(void)
 {
     return FSMOMC_VERSION;
 }
+
+const char * fsmomc_str_ver(void)
+{
+    return version;
+}
 /* state machine end */

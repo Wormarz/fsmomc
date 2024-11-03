@@ -47,6 +47,7 @@ int add_trans_rule(char *from, char *to);
 struct working_state* trans_stat(struct working_state *from, char *to);
 void setup_first_state(char *name);
 uint32_t fsmomc_version(void);
+const char * fsmomc_str_ver(void);
 
 void state_machine_loop(void);
 /* state machine end */
