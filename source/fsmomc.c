@@ -8,7 +8,7 @@ const char version[] = "Ver: "FSMOMC_VERSION_STR; /* version */
 static struct working_state states[MAX_SM_NUMS];
 static struct working_state *cur_stat = &states[0];
 
-static struct working_state* stat_lookup(char *name)
+static struct working_state* stat_lookup(const char *name)
 {
     for (int i = 0; i < MAX_SM_NUMS; ++i) {
         if (strncmp(states[i].state, name, MAX_SM_NAME_LEN) == 0) {
@@ -24,7 +24,7 @@ void init_state_machine(void)
     memset(states, 0, sizeof(states));
 }
 
-int add_state(char *name, worker wkr, void (*init)(struct working_state*))
+int add_state(const char *name, worker wkr, void (*init)(struct working_state*))
 {
     for (int i = 0; i < MAX_SM_NUMS; ++i) {
         if (states[i].state[0] == '\0') {
@@ -41,12 +41,12 @@ int add_state(char *name, worker wkr, void (*init)(struct working_state*))
     return -1;
 }
 
-int del_state(char *name)
+int del_state(const char *name)
 {/* TO-DO */
     return -1;
 }
 
-int add_substate(char *parent, char *sub, worker wkr,
+int add_substate(const char *parent, const char *sub, worker wkr,
                  void (*init)(struct working_state*))
 {
     int idx = -1;
@@ -70,12 +70,12 @@ int add_substate(char *parent, char *sub, worker wkr,
     return -1;
 }
 
-int del_substate(char *parent, char *sub)
+int del_substate(const char *parent, const char *sub)
 {/* TO-DO */
     return -1;
 }
 
-int add_trans_rule(char *from, char *to)
+int add_trans_rule(const char *from, const char *to)
 {
     struct working_state *fstat, *tostat;
     int ret = -1;
@@ -111,12 +111,12 @@ void state_machine_loop(void)
     }
 }
 
-void setup_first_state(char *name)
+void setup_first_state(const char *name)
 {
     CHG_STATE(cur_stat, name);
 }
 
-struct working_state* trans_stat(struct working_state *from, char *to)
+struct working_state* trans_stat(struct working_state *from, const char *to)
 {
     for (int i = 0; i < MAX_SM_EDGES_NUMS && from->edges[i] != 0xff; ++i) {
         if (strncmp(states[from->edges[i]].state, to, MAX_SM_NAME_LEN) == 0) {

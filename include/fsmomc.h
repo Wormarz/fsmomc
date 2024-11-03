@@ -40,13 +40,13 @@ struct working_state
 
 void init_state_machine(void);
 int add_state(const char *name, worker wkr, void (*init)(struct working_state*));
-int del_state(char *name);
-int add_substate(char *parent, char *sub, worker wkr,
+int del_state(const char *name);
+int add_substate(const char *parent, const char *sub, worker wkr,
                  void (*init)(struct working_state*));
-int del_substate(char *parent, char *sub);
-int add_trans_rule(char *from, char *to);
-struct working_state* trans_stat(struct working_state *from, char *to);
-void setup_first_state(char *name);
+int del_substate(const char *parent, const char *sub);
+int add_trans_rule(const char *from, const char *to);
+struct working_state* trans_stat(struct working_state *from, const char *to);
+void setup_first_state(const char *name);
 uint32_t fsmomc_version(void);
 const char * fsmomc_str_ver(void);
 
