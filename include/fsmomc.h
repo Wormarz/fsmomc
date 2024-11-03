@@ -1,11 +1,12 @@
-#ifndef	__MISC__
-#define __MISC__
+#ifndef	__FSMOMC_H__
+#define __FSMOMC_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdint.h>
+#include <assert.h>
 
 #define ARRAY_SIZE(arr)   (sizeof(arr)/sizeof((arr)[0]))
 #define STR1(R) #R
@@ -56,4 +57,4 @@ void state_machine_loop(void);
 }
 #endif
 
-#endif
+#endif /* __FSMOMC_H__ */
