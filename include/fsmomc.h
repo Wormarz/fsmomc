@@ -32,13 +32,21 @@ struct working_state
         struct working_state *sub;
     };
     uint8_t edges[MAX_SM_EDGES_NUMS];
+}__attribute__((aligned(4)));
+
+struct state_machine
+{
+    uint32_t stat_nums;
+    struct working_state states[];
 };
+
+#define ALLOC_SM_BUF(_b, _n) uint8_t _b[(sizeof(uint32_t) + (_n) * sizeof(struct working_state))]
 
 #define CHG_STATE(_c, _ns) do { (_c) = trans_stat((_c), (_ns)); \
                                 assert((_c) != NULL); \
                               } while(0)
 
-void init_state_machine(void);
+int init_state_machine(struct state_machine *sm, uint32_t buf_zs, uint32_t st_nums);
 int add_state(const char *name, worker wkr, void (*init)(struct working_state*));
 int del_state(const char *name);
 int add_substate(const char *parent, const char *sub, worker wkr,

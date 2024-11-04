@@ -19,9 +19,15 @@ static struct working_state* stat_lookup(const char *name)
     return NULL;
 }
 
-void init_state_machine(void)
+int init_state_machine(struct state_machine *sm, uint32_t buf_zs, uint32_t st_nums)
 {
-    memset(states, 0, sizeof(states));
+    if (sm == NULL || buf_zs != st_nums * sizeof(struct working_state) + 4) {
+        return -1;
+    }
+
+    memset(sm, 0, sizeof(struct working_state) * st_nums + 4);
+    sm->stat_nums = st_nums;
+    return 0;
 }
 
 int add_state(const char *name, worker wkr, void (*init)(struct working_state*))

@@ -49,3 +49,14 @@ TEST_CASE("adding new states", "[new_state]")
         REQUIRE(init_flag == true);
     }
 }
+
+
+TEST_CASE("initlize state machine", "[new_state_machine]")
+{
+    ALLOC_SM_BUF(buf, 10);
+    SECTION("initlize state machine") {
+        REQUIRE(sizeof(buf) == 10 * sizeof(struct working_state) + 4); //make sure the buffer size is correct
+        REQUIRE(init_state_machine((struct state_machine *)buf, sizeof(buf), 10) == 0);
+        REQUIRE(((struct state_machine *)buf)->stat_nums == 10);
+    }
+}
