@@ -47,7 +47,7 @@ struct state_machine
                               } while(0)
 
 int init_state_machine(struct state_machine *sm, uint32_t buf_zs, uint32_t st_nums);
-int add_state(const char *name, worker wkr, void (*init)(struct working_state*));
+int add_state(struct state_machine *sm, const char *name, worker wkr, void (*init)(struct working_state*));
 int del_state(const char *name);
 int add_substate(const char *parent, const char *sub, worker wkr,
                  void (*init)(struct working_state*));

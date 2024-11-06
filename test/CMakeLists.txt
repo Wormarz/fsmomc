@@ -35,3 +35,16 @@ target_include_directories(init PUBLIC
 add_test( NAME init_test
   COMMAND $<TARGET_FILE:init> --success
 )
+
+# add states test
+add_executable(add_state add_state.cpp)
+target_link_libraries(add_state ${PROJECT_NAME})
+
+target_include_directories(add_state PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${PROJECT_BINARY_DIR}/include
+)
+
+add_test( NAME add_state_test
+  COMMAND $<TARGET_FILE:add_state> --success
+)

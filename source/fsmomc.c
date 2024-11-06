@@ -30,15 +30,19 @@ int init_state_machine(struct state_machine *sm, uint32_t buf_zs, uint32_t st_nu
     return 0;
 }
 
-int add_state(const char *name, worker wkr, void (*init)(struct working_state*))
+int add_state(struct state_machine *sm, const char *name, worker wkr, void (*init)(struct working_state*))
 {
-    for (int i = 0; i < MAX_SM_NUMS; ++i) {
-        if (states[i].state[0] == '\0') {
-            strncpy(states[i].state, name, MAX_SM_NAME_LEN);
-            states[i].runner = wkr;
-            memset(states[i].edges, 0xff, sizeof(uint8_t) * MAX_SM_EDGES_NUMS);
+    if (sm == NULL || name == NULL) {
+        return -1;
+    }
+
+    for (int i = 0; i < sm->stat_nums; ++i) {
+        if (sm->states[i].state[0] == '\0') {
+            strncpy(sm->states[i].state, name, MAX_SM_NAME_LEN);
+            sm->states[i].runner = wkr;
+            memset(sm->states[i].edges, 0xff, sizeof(uint8_t) * MAX_SM_EDGES_NUMS);
             if (init != NULL) {
-                init(&states[i]);
+                init(&(sm->states[i]));
             }
             return 0;
         }
