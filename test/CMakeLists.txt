@@ -1,6 +1,4 @@
 # testing binary
-add_executable(fsmomc_test test.cpp)
-target_link_libraries(fsmomc_test ${PROJECT_NAME})
 
 set(url https://github.com/philsquared/Catch/releases/download/v2.13.6/catch.hpp)
 file(
@@ -11,12 +9,29 @@ list(GET status 0 error)
 if(error)
   message(FATAL_ERROR "Could not download ${url}")
 endif()
-target_include_directories(fsmomc_test PUBLIC
+
+# version test
+add_executable(version version.cpp)
+target_link_libraries(version ${PROJECT_NAME})
+
+target_include_directories(version PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
     ${PROJECT_BINARY_DIR}/include
 )
 
-add_test(
-  NAME lib_test
-  COMMAND $<TARGET_FILE:fsmomc_test> --success
+add_test( NAME version_test
+  COMMAND $<TARGET_FILE:version> --success
+)
+
+# initialization test
+add_executable(init init.cpp)
+target_link_libraries(init ${PROJECT_NAME})
+
+target_include_directories(init PUBLIC
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${PROJECT_BINARY_DIR}/include
+)
+
+add_test( NAME init_test
+  COMMAND $<TARGET_FILE:init> --success
 )
