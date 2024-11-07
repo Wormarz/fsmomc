@@ -5,7 +5,7 @@
 #include "catch.hpp"
 
 
-TEST_CASE("initlize state machine instance", "[init_sm_instance]")
+TEST_CASE("initlize state machine instance")
 {
     ALLOC_SM_BUF(buf, 10);
     SECTION("Test Case 1 - Normal Initialization") {

@@ -15,7 +15,7 @@ static void init1(struct working_state* self)
     init_flag = true;
 }
 
-TEST_CASE("adding new states", "[new_state]")
+TEST_CASE("adding new states")
 {
     ALLOC_SM_BUF(buf, 10);
     init_state_machine((struct state_machine *)buf, sizeof(buf), 10);

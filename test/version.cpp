@@ -4,7 +4,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
-TEST_CASE("get version of the library", "[version]")
+TEST_CASE("get version of the library")
 {
     #include "version.h"
 
