@@ -10,9 +10,16 @@ if(error)
   message(FATAL_ERROR "Could not download ${url}")
 endif()
 
+set(CTEST_MEMORYCHECK_TYPE "AddressSanitizer")
+set(CTEST_MEMORYCHECK_SANITIZER_OPTIONS "verbosity=1:symbolize=1:abort_on_error=1:detect_leaks=1")
+
 # version test
 add_executable(version version.cpp)
-target_link_libraries(version ${PROJECT_NAME})
+target_compile_options(version
+PUBLIC
+    -g -fsanitize=address -fno-omit-frame-pointer
+)
+target_link_libraries(version ${PROJECT_NAME} asan)
 
 target_include_directories(version PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -25,7 +32,11 @@ add_test( NAME version_test
 
 # initialization test
 add_executable(init init.cpp)
-target_link_libraries(init ${PROJECT_NAME})
+target_compile_options(init
+PUBLIC
+    -g -fsanitize=address -fno-omit-frame-pointer
+)
+target_link_libraries(init ${PROJECT_NAME} asan)
 
 target_include_directories(init PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -38,7 +49,11 @@ add_test( NAME init_test
 
 # add states test
 add_executable(add_state add_state.cpp)
-target_link_libraries(add_state ${PROJECT_NAME})
+target_compile_options(add_state
+PUBLIC
+    -g -fsanitize=address -fno-omit-frame-pointer
+)
+target_link_libraries(add_state ${PROJECT_NAME} asan)
 
 target_include_directories(add_state PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
