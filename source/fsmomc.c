@@ -56,22 +56,24 @@ int del_state(const char *name)
     return -1;
 }
 
-int add_substate(const char *parent, const char *sub, worker wkr,
+int add_substate(struct state_machine *sm, const char *parent, const char *sub, worker wkr,
                  void (*init)(struct working_state*))
 {
     int idx = -1;
 
-    assert(parent && sub && wkr);
+    if (sm == NULL || sub == NULL || wkr == NULL || parent == NULL) {
+        return -1;
+    }
 
-    for (int i = 0; i < MAX_SM_NUMS; ++i) {
-        idx = strncmp(states[i].state, parent, MAX_SM_NAME_LEN) ? idx : i;
-        if (states[i].state[0] == '\0' && idx != -1) {
-            strncpy(states[i].state, sub, MAX_SM_NAME_LEN);
-            states[i].runner = wkr;
-            states[idx].sub = &states[i]; /* bind sub-state worker to its parent state */
-            memset(states[i].edges, 0xff, sizeof(uint8_t) * MAX_SM_EDGES_NUMS);
+    for (int i = 0; i < sm->stat_nums; ++i) {
+        idx = strncmp(sm->states[i].state, parent, MAX_SM_NAME_LEN) ? idx : i;
+        if (sm->states[i].state[0] == '\0' && idx != -1) {
+            strncpy(sm->states[i].state, sub, MAX_SM_NAME_LEN);
+            sm->states[i].runner = wkr;
+            sm->states[idx].sub = &(sm->states[i]); /* bind sub-state worker to its parent state */
+            memset(sm->states[i].edges, 0xff, sizeof(uint8_t) * MAX_SM_EDGES_NUMS);
             if (init != NULL) {
-                init(&states[i]);
+                init(&(sm->states[i]));
             }
             return 0;
         }
