@@ -33,7 +33,7 @@ TEST_CASE("adding new states")
 
     SECTION("Test 3 - State machine full") {
         for (int i = 0; i < sm->stat_nums; ++i) {
-            sm->states[i].state[0] = 'f';
+            REQUIRE(add_state(sm, "state1", worker1, NULL) == 0);
         }
         REQUIRE(add_state(sm, "state1", worker1, NULL) != 0);
     }
@@ -81,7 +81,7 @@ TEST_CASE("adding sub-states") {
 
     SECTION("Test 5 - State machine full") {
         for (int i = 0; i < sm->stat_nums; ++i) {
-            sm->states[i].state[0] = 'f';
+            REQUIRE(add_state(sm, "state1", worker1, NULL) == 0);
         }
         REQUIRE(add_substate(sm, "abs-st", "state1", worker1, NULL) != 0);
     }
