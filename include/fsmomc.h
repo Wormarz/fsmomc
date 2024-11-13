@@ -37,12 +37,18 @@ struct working_state
 struct state_machine
 {
     uint32_t stat_nums;
+    struct working_state *prv_stat;
+    struct working_state *cur_stat;
     struct working_state states[];
 };
 
-#define ALLOC_SM_BUF(_b, _n) uint8_t _b[(sizeof(uint32_t) + (_n) * sizeof(struct working_state))]
+#define ALLOC_SM_BUF(_b, _n) uint8_t _b[(sizeof(struct state_machine) + (_n) * sizeof(struct working_state))]
 
-#define CHG_STATE(_c, _ns) do { (_c) = trans_stat((_c), (_ns)); \
+#define CHG_STATE(_c, _ns) do { (_c) = trans_stat(sm, (_c), (_ns)); \
+                                assert((_c) != NULL); \
+                              } while(0)
+
+#define CHG_STATE_TO(_ns)   do { (_c) = trans_stat(sm, sm->cur_stat, (_ns)); \
                                 assert((_c) != NULL); \
                               } while(0)
 
@@ -52,13 +58,13 @@ int del_state(const char *name);
 int add_substate(struct state_machine *sm, const char *parent, const char *sub, worker wkr,
                  void (*init)(struct working_state*));
 int del_substate(const char *parent, const char *sub);
-int add_trans_rule(const char *from, const char *to);
-struct working_state* trans_stat(struct working_state *from, const char *to);
-void setup_first_state(const char *name);
+int add_trans_rule(struct state_machine *sm, const char *from, const char *to);
+struct working_state* trans_stat(struct state_machine *sm, struct working_state *from, const char *to);
+void setup_first_state(struct state_machine *sm, const char *name);
 uint32_t fsmomc_version(void);
 const char * fsmomc_str_ver(void);
 
-void state_machine_loop(void);
+void state_machine_loop(struct state_machine *sm);
 /* state machine end */
 
 #ifdef __cplusplus
