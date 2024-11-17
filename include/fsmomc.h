@@ -14,8 +14,11 @@ extern "C" {
 
 /* state machine start */
 #define MAX_SM_NAME_LEN 16
-#define MAX_SM_NUMS     8
 #define MAX_SM_EDGES_NUMS 4
+
+#if (MAX_SM_EDGES_NUMS % 4 != 0) || (MAX_SM_NAME_LEN % 4 != 0)
+#error "MAX_SM_EDGES_NUMS and MAX_SM_NAME_LEN must be multiple of 4"
+#endif /* __FSMOMC_H__ */
 
 struct working_state;
 typedef struct working_state* (*actions)(struct working_state *self);
@@ -48,9 +51,6 @@ struct state_machine
                                 assert((_c) != NULL); \
                               } while(0)
 
-#define CHG_STATE_TO(_ns)   do { (_c) = trans_stat(sm, sm->cur_stat, (_ns)); \
-                                assert((_c) != NULL); \
-                              } while(0)
 
 int init_state_machine(struct state_machine *sm, uint32_t buf_zs, uint32_t st_nums);
 int add_state(struct state_machine *sm, const char *name, actions act, void (*init)(struct working_state*));
