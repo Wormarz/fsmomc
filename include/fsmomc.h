@@ -7,25 +7,23 @@ extern "C" {
 
 #include <stdint.h>
 #include <assert.h>
+#include "autoconf.h"
 
 #define ARRAY_SIZE(arr)   (sizeof(arr)/sizeof((arr)[0]))
 #define STR1(R) #R
 #define STR2(R) STR1(R)
 
 /* state machine start */
-#define MAX_SM_NAME_LEN 16
-#define MAX_SM_EDGES_NUMS 4
-
-#if (MAX_SM_EDGES_NUMS % 4 != 0) || (MAX_SM_NAME_LEN % 4 != 0)
+#if (CONFIG_MAX_SM_EDGES_NUMS % 4 != 0) || (CONFIG_MAX_SM_NAME_LEN % 4 != 0)
 #error "MAX_SM_EDGES_NUMS and MAX_SM_NAME_LEN must be multiple of 4"
-#endif /* __FSMOMC_H__ */
+#endif
 
 struct working_state;
 typedef struct working_state* (*actions)(struct working_state *self);
 
 struct working_state
 {
-    char state[MAX_SM_NAME_LEN];
+    char state[CONFIG_MAX_SM_NAME_LEN];
     actions act;
     void (*enter)(struct working_state*);
     void (*exit)(struct working_state*);
@@ -34,7 +32,7 @@ struct working_state
         void *args;
         struct working_state *sub;
     };
-    uint8_t edges[MAX_SM_EDGES_NUMS];
+    uint8_t edges[CONFIG_MAX_SM_EDGES_NUMS];
 }__attribute__((aligned(4)));
 
 struct state_machine

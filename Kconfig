@@ -1,8 +1,13 @@
-mainmenu "Project Configuration"
+mainmenu "FSMOMC Configuration"
 
-config TEST_OPTION
-    bool "Test Option"
-    help
-        Test option description
+config MAX_SM_NAME_LEN
+    int "Maximum length of state machine name"
+    range 0 32
+    default 16
+
+config MAX_SM_EDGES_NUMS
+    int "Maximum number of edges that a state support"
+    range 0 32
+    default 4
 
 
