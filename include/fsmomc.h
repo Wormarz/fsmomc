@@ -42,7 +42,7 @@ struct state_machine
     struct working_state states[];
 };
 
-#define ALLOC_SM_BUF(_b, _n) uint8_t _b[(sizeof(struct state_machine) + (_n) * sizeof(struct working_state))]
+#define ALLOC_SM_INS(_b, _n) uint8_t _b[(sizeof(struct state_machine) + (_n) * sizeof(struct working_state))]
 
 #define CHG_STATE(_c, _ns) do { (_c) = trans_stat(sm, (_c), (_ns)); \
                                 assert((_c) != NULL); \
