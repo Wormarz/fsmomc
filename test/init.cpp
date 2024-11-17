@@ -7,7 +7,7 @@
 
 TEST_CASE("initlize state machine instance")
 {
-    ALLOC_SM_BUF(buf, 10);
+    ALLOC_SM_INS(buf, 10);
     SECTION("Test Case 1 - Normal Initialization") {
         REQUIRE(init_state_machine((struct state_machine *)buf, sizeof(buf), 10) == 0);
         REQUIRE(((struct state_machine *)buf)->stat_nums == 10);

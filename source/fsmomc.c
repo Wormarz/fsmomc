@@ -7,11 +7,13 @@ const char version[] = "Ver: "FSMOMC_VERSION_STR; /* version */
 
 static struct working_state* stat_lookup(struct state_machine *sm, const char *name)
 {
-    assert(sm != NULL && name != NULL);
+    if (sm == NULL || name == NULL) {
+        return NULL;
+    }
 
     for (int i = 0; i < sm->stat_nums; ++i) {
         if (strncmp(sm->states[i].state, name, MAX_SM_NAME_LEN) == 0) {
-            return &sm->states[i];
+            return &(sm->states[i]);
         }
     }
 
@@ -20,18 +22,22 @@ static struct working_state* stat_lookup(struct state_machine *sm, const char *n
 
 int init_state_machine(struct state_machine *sm, uint32_t buf_zs, uint32_t st_nums)
 {
-    assert(sm != NULL && buf_zs == st_nums * sizeof(struct working_state) + sizeof(struct state_machine));
+    if (sm == NULL || buf_zs != st_nums * sizeof(struct working_state) + sizeof(struct state_machine)) {
+        return -1;
+    }
 
     memset(sm, 0, sizeof(struct working_state) * st_nums + sizeof(struct state_machine));
     sm->stat_nums = st_nums;
-    sm->cur_stat = &sm->states[0];
+    sm->cur_stat = &(sm->states[0]);
 
     return 0;
 }
 
 int add_state(struct state_machine *sm, const char *name, actions act, void (*init)(struct working_state*))
 {
-    assert(sm != NULL && name != NULL);
+    if (sm == NULL || name == NULL) {
+        return -1;
+    }
 
     for (int i = 0; i < sm->stat_nums; ++i) {
         if (sm->states[i].state[0] == '\0') {
@@ -56,7 +62,10 @@ int del_state(const char *name)
 int add_substate(struct state_machine *sm, const char *parent, const char *sub, actions act,
                  void (*init)(struct working_state*))
 {
-    assert(sm != NULL && sub != NULL && act != NULL && parent != NULL);
+    if (sm == NULL || sub == NULL || act == NULL || parent == NULL) {
+        return -1;
+    }
+
     int idx = -1;
 
     for (int i = 0; i < sm->stat_nums; ++i) {
@@ -83,7 +92,9 @@ int del_substate(const char *parent, const char *sub)
 
 int add_trans_rule(struct state_machine *sm, const char *from, const char *to)
 {
-    assert(sm != NULL && from != NULL && to != NULL);
+    if (sm == NULL || from == NULL || to == NULL) {
+        return -1;
+    }
 
     struct working_state *fstat, *tostat;
     int ret = -1;
@@ -109,9 +120,9 @@ void state_machine_loop(struct state_machine *sm)
 
     if (sm->prv_stat != sm->cur_stat) {
         sm->cur_stat->enter ? sm->cur_stat->enter(sm->cur_stat) : NULL;
-        sm->prv_stat = sm->cur_stat;
+        assert((sm->prv_stat = sm->cur_stat) != NULL);
     }
-    sm->cur_stat = sm->cur_stat->act(sm->cur_stat);
+    assert((sm->cur_stat = sm->cur_stat->act(sm->cur_stat)) != NULL);
     if (sm->prv_stat != sm->cur_stat) {
         sm->prv_stat->exit ? sm->prv_stat->exit(sm->prv_stat) : NULL;
     }
@@ -124,12 +135,14 @@ void setup_first_state(struct state_machine *sm, const char *name)
 
 struct working_state* trans_stat(struct state_machine *sm, struct working_state *from, const char *to)
 {
-    assert(from != NULL && to != NULL && sm != NULL);
+    if (from == NULL || to == NULL || sm == NULL) {
+        return NULL;
+    }
 
     for (int i = 0; i < MAX_SM_EDGES_NUMS && from->edges[i] != 0xff; ++i) {
         if (strncmp(sm->states[from->edges[i]].state, to, MAX_SM_NAME_LEN) == 0) {
             return sm->states[from->edges[i]].act ?
-                    &sm->states[from->edges[i]] : sm->states[from->edges[i]].sub;
+                    &(sm->states[from->edges[i]]) : sm->states[from->edges[i]].sub;
         }
     }
 

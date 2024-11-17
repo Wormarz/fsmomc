@@ -17,7 +17,7 @@ static void init1(struct working_state* self)
 
 TEST_CASE("adding new states")
 {
-    ALLOC_SM_BUF(buf, 10);
+    ALLOC_SM_INS(buf, 10);
     REQUIRE(init_state_machine((struct state_machine *)buf, sizeof(buf), 10) == 0);
     struct state_machine *sm = (struct state_machine *)buf;
 
@@ -49,7 +49,7 @@ TEST_CASE("adding new states")
 }
 
 TEST_CASE("adding sub-states") {
-    ALLOC_SM_BUF(buf, 10);
+    ALLOC_SM_INS(buf, 10);
     REQUIRE(init_state_machine((struct state_machine *)buf, sizeof(buf), 10) == 0);
     struct state_machine *sm = (struct state_machine *)buf;
 
