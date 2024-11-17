@@ -18,12 +18,12 @@ extern "C" {
 #define MAX_SM_EDGES_NUMS 4
 
 struct working_state;
-typedef struct working_state* (*worker)(struct working_state *self);
+typedef struct working_state* (*actions)(struct working_state *self);
 
 struct working_state
 {
     char state[MAX_SM_NAME_LEN];
-    worker runner;
+    actions act;
     void (*enter)(struct working_state*);
     void (*exit)(struct working_state*);
     union
@@ -53,9 +53,9 @@ struct state_machine
                               } while(0)
 
 int init_state_machine(struct state_machine *sm, uint32_t buf_zs, uint32_t st_nums);
-int add_state(struct state_machine *sm, const char *name, worker wkr, void (*init)(struct working_state*));
+int add_state(struct state_machine *sm, const char *name, actions act, void (*init)(struct working_state*));
 int del_state(const char *name);
-int add_substate(struct state_machine *sm, const char *parent, const char *sub, worker wkr,
+int add_substate(struct state_machine *sm, const char *parent, const char *sub, actions act,
                  void (*init)(struct working_state*));
 int del_substate(const char *parent, const char *sub);
 int add_trans_rule(struct state_machine *sm, const char *from, const char *to);
