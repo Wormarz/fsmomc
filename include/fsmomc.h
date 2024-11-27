@@ -20,19 +20,22 @@ extern "C" {
 struct working_state;
 typedef struct working_state *(*actions)(struct working_state *self);
 
-struct working_state {
+struct working_state
+{
     char state[CONFIG_MAX_SM_NAME_LEN];
     actions act;
     void (*enter)(struct working_state *);
     void (*exit)(struct working_state *);
-    union {
+    union
+    {
         void *args;
         struct working_state *sub;
     };
     uint8_t edges[CONFIG_MAX_SM_EDGES_NUMS];
 } __attribute__((aligned(4)));
 
-struct state_machine {
+struct state_machine
+{
     uint32_t stat_nums;
     struct working_state *prv_stat;
     struct working_state *cur_stat;

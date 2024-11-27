@@ -5,7 +5,8 @@
 const char version[] = "Ver: " FSMOMC_VERSION_STR; /* version */
 
 static struct working_state *stat_lookup(struct state_machine *sm,
-                                         const char *name) {
+                                         const char *name)
+{
     if (sm == NULL || name == NULL) {
         return NULL;
     }
@@ -19,8 +20,20 @@ static struct working_state *stat_lookup(struct state_machine *sm,
     return NULL;
 }
 
+/**
+ * @brief Initialize the state machine.
+ *
+ * @param sm Pointer to the state machine structure.
+ * @param buf_zs Buffer size of state machine, passed through parameter sm.
+ * @param st_nums Number of states.
+ * @return Returns 0 on success.
+ *
+ * @note
+ * This function initializes a state machine instance.
+ */
 int init_state_machine(struct state_machine *sm, uint32_t buf_zs,
-                       uint32_t st_nums) {
+                       uint32_t st_nums)
+{
     if (sm == NULL || buf_zs != st_nums * sizeof(struct working_state) +
                                     sizeof(struct state_machine)) {
         return -1;
@@ -34,7 +47,8 @@ int init_state_machine(struct state_machine *sm, uint32_t buf_zs,
 }
 
 int add_state(struct state_machine *sm, const char *name, actions act,
-              void (*init)(struct working_state *)) {
+              void (*init)(struct working_state *))
+{
     if (sm == NULL || name == NULL) {
         return -1;
     }
@@ -55,12 +69,14 @@ int add_state(struct state_machine *sm, const char *name, actions act,
     return -1;
 }
 
-int del_state(const char *name) { /* TO-DO */
+int del_state(const char *name)
+{ /* TO-DO */
     return -1;
 }
 
 int add_substate(struct state_machine *sm, const char *parent, const char *sub,
-                 actions act, void (*init)(struct working_state *)) {
+                 actions act, void (*init)(struct working_state *))
+{
     if (sm == NULL || sub == NULL || act == NULL || parent == NULL) {
         return -1;
     }
@@ -73,8 +89,8 @@ int add_substate(struct state_machine *sm, const char *parent, const char *sub,
         if (sm->states[i].state[0] == '\0' && idx != -1) {
             strncpy(sm->states[i].state, sub, CONFIG_MAX_SM_NAME_LEN);
             sm->states[i].act = act;
-            sm->states[idx].sub = &(
-                sm->states[i]); /* bind sub-state actions to its parent state */
+            /* bind sub-state actions to its parent state */
+            sm->states[idx].sub = &(sm->states[i]);
             memset(sm->states[i].edges, 0xff,
                    sizeof(uint8_t) * CONFIG_MAX_SM_EDGES_NUMS);
             if (init != NULL) {
@@ -87,11 +103,13 @@ int add_substate(struct state_machine *sm, const char *parent, const char *sub,
     return -1;
 }
 
-int del_substate(const char *parent, const char *sub) { /* TO-DO */
+int del_substate(const char *parent, const char *sub)
+{ /* TO-DO */
     return -1;
 }
 
-int add_trans_rule(struct state_machine *sm, const char *from, const char *to) {
+int add_trans_rule(struct state_machine *sm, const char *from, const char *to)
+{
     if (sm == NULL || from == NULL || to == NULL) {
         return -1;
     }
@@ -114,7 +132,8 @@ int add_trans_rule(struct state_machine *sm, const char *from, const char *to) {
     return ret;
 }
 
-void state_machine_loop(struct state_machine *sm) {
+void state_machine_loop(struct state_machine *sm)
+{
     assert(sm != NULL);
 
     if (sm->prv_stat != sm->cur_stat) {
@@ -127,12 +146,14 @@ void state_machine_loop(struct state_machine *sm) {
     }
 }
 
-void setup_first_state(struct state_machine *sm, const char *name) {
+void setup_first_state(struct state_machine *sm, const char *name)
+{
     assert((sm->cur_stat = stat_lookup(sm, name)) != NULL);
 }
 
 struct working_state *trans_stat(struct state_machine *sm,
-                                 struct working_state *from, const char *to) {
+                                 struct working_state *from, const char *to)
+{
     if (from == NULL || to == NULL || sm == NULL) {
         return NULL;
     }
@@ -150,10 +171,12 @@ struct working_state *trans_stat(struct state_machine *sm,
     return NULL;
 }
 
-uint32_t fsmomc_version(void) {
+uint32_t fsmomc_version(void)
+{
     return FSMOMC_VERSION;
 }
 
-const char *fsmomc_str_ver(void) {
+const char *fsmomc_str_ver(void)
+{
     return version;
 }
