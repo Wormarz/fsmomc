@@ -28,8 +28,8 @@ struct working_state
     void (*exit)(struct working_state *);
     union
     {
-        void *args;
         struct working_state *sub;
+        struct state_machine *sm;
     };
     uint8_t edges[CONFIG_MAX_SM_EDGES_NUMS];
 } __attribute__((aligned(4)));
@@ -46,10 +46,19 @@ struct state_machine
     uint8_t _b[(sizeof(struct state_machine) +                                 \
                 (_n) * sizeof(struct working_state))]
 
-#define CHG_STATE(_c, _ns)                                                     \
+#define CHG_STATE(_ns_)                                                        \
     do {                                                                       \
-        (_c) = trans_stat(sm, (_c), (_ns));                                    \
-        assert((_c) != NULL);                                                  \
+        self = trans_stat(self->sm, self, (_ns_));                             \
+        assert(self != NULL);                                                  \
+    } while (0)
+
+#define DECLARE_STAT_ACTIONS(_act_)                                            \
+    struct working_state *_act_(struct working_state *self, void *in, void *out)
+
+#define STAT_ACT_START
+#define STAT_ACT_END                                                           \
+    do {                                                                       \
+        return self;                                                           \
     } while (0)
 
 int init_state_machine(struct state_machine *sm, uint32_t buf_zs,

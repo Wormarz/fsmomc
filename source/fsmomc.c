@@ -56,7 +56,9 @@ int add_state(struct state_machine *sm, const char *name, actions act,
     for (int i = 0; i < sm->stat_nums; ++i) {
         if (sm->states[i].state[0] == '\0') {
             strncpy(sm->states[i].state, name, CONFIG_MAX_SM_NAME_LEN);
-            sm->states[i].act = act;
+            if ((sm->states[i].act = act) != NULL) {
+                sm->states[i].sm = sm;
+            }
             memset(sm->states[i].edges, 0xff,
                    sizeof(uint8_t) * CONFIG_MAX_SM_EDGES_NUMS);
             if (init != NULL) {
