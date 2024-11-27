@@ -119,7 +119,9 @@ int add_trans_rule(struct state_machine *sm, const char *from, const char *to)
     fstat = stat_lookup(sm, from);
     tostat = stat_lookup(sm, to);
 
-    assert(fstat != NULL && tostat != NULL);
+    if (fstat == NULL || tostat == NULL) {
+        return -1;
+    }
 
     for (int i = 0; i < CONFIG_MAX_SM_EDGES_NUMS; ++i) {
         if (fstat->edges[i] == 0xff) {
