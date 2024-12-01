@@ -1,8 +1,5 @@
-#include "fsmomc.h"
-// this tells catch to provide a main()
-// only do this in one cpp file
-#define CATCH_CONFIG_MAIN
 #include "catch.hpp"
+#include "fsmomc.h"
 
 static bool init_flag;
 static DECLARE_STAT_ACTIONS(worker1)
