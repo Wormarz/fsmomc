@@ -141,13 +141,42 @@ void state_machine_loop(struct state_machine *sm)
     assert(sm != NULL);
 
     if (sm->prv_stat != sm->cur_stat) {
-        sm->cur_stat->enter ? sm->cur_stat->enter(sm->cur_stat) : NULL;
+        sm->cur_stat->enter ? sm->cur_stat->enter(sm->cur_stat, NULL, NULL)
+                            : NULL;
         assert((sm->prv_stat = sm->cur_stat) != NULL);
     }
-    assert((sm->cur_stat = sm->cur_stat->act(sm->cur_stat)) != NULL);
+    assert((sm->cur_stat = sm->cur_stat->act(sm->cur_stat, NULL, NULL)) !=
+           NULL);
     if (sm->prv_stat != sm->cur_stat) {
-        sm->prv_stat->exit ? sm->prv_stat->exit(sm->prv_stat) : NULL;
+        sm->prv_stat->exit ? sm->prv_stat->exit(sm->prv_stat, NULL, NULL)
+                           : NULL;
     }
+}
+
+int state_machine_out(struct state_machine *sm, void *in, void *out)
+{
+    assert(sm != NULL);
+
+    if (out == NULL) {
+        return -1;
+    }
+
+    while (sm->out_ready == 0) {
+        if (sm->prv_stat != sm->cur_stat) {
+            sm->cur_stat->enter ? sm->cur_stat->enter(sm->cur_stat, in, out)
+                                : NULL;
+            assert((sm->prv_stat = sm->cur_stat) != NULL);
+        }
+        assert((sm->cur_stat = sm->cur_stat->act(sm->cur_stat, in, out)) !=
+               NULL);
+        if (sm->prv_stat != sm->cur_stat) {
+            sm->prv_stat->exit ? sm->prv_stat->exit(sm->prv_stat, in, out)
+                               : NULL;
+        }
+    }
+    sm->out_ready = 0;
+
+    return 0;
 }
 
 void setup_first_state(struct state_machine *sm, const char *name)

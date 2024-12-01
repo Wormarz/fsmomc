@@ -18,14 +18,15 @@ extern "C" {
 #endif
 
 struct working_state;
-typedef struct working_state *(*actions)(struct working_state *self);
+typedef struct working_state *(*actions)(struct working_state *self, void *in,
+                                         void *out);
 
 struct working_state
 {
     char state[CONFIG_MAX_SM_NAME_LEN];
     actions act;
-    void (*enter)(struct working_state *);
-    void (*exit)(struct working_state *);
+    void (*enter)(struct working_state *, void *, void *);
+    void (*exit)(struct working_state *, void *, void *);
     union
     {
         struct working_state *sub;
@@ -36,7 +37,9 @@ struct working_state
 
 struct state_machine
 {
-    uint32_t stat_nums;
+    uint32_t out_ready : 1;
+    uint32_t : 1;
+    uint32_t stat_nums : 30;
     struct working_state *prv_stat;
     struct working_state *cur_stat;
     struct working_state states[];
@@ -55,10 +58,20 @@ struct state_machine
 #define DECLARE_STAT_ACTIONS(_act_)                                            \
     struct working_state *_act_(struct working_state *self, void *in, void *out)
 
+#define DECLARE_STAT_ENTER(_act_)                                              \
+    void _act_(struct working_state *self, void *in, void *out)
+
+#define DECLARE_STAT_EXIT(_act_) DECLARE_STAT_ENTER(_act_)
+
 #define STAT_ACT_START
 #define STAT_ACT_END                                                           \
     do {                                                                       \
         return self;                                                           \
+    } while (0)
+
+#define STAT_OUT_READY()                                                       \
+    do {                                                                       \
+        self->sm->out_ready = 1;                                               \
     } while (0)
 
 int init_state_machine(struct state_machine *sm, uint32_t buf_zs,
@@ -77,6 +90,7 @@ uint32_t fsmomc_version(void);
 const char *fsmomc_str_ver(void);
 
 void state_machine_loop(struct state_machine *sm);
+int state_machine_out(struct state_machine *sm, void *in, void *out);
 
 #ifdef __cplusplus
 }
