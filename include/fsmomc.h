@@ -58,10 +58,10 @@ struct state_machine
 #define DECLARE_STAT_ACTIONS(_act_)                                            \
     struct working_state *_act_(struct working_state *self, void *in, void *out)
 
-#define DECLARE_STAT_ENTER(_act_)                                              \
-    void _act_(struct working_state *self, void *in, void *out)
+#define DECLARE_STAT_ENTER(_enter_)                                            \
+    void _enter_(struct working_state *self, void *in, void *out)
 
-#define DECLARE_STAT_EXIT(_act_) DECLARE_STAT_ENTER(_act_)
+#define DECLARE_STAT_EXIT(_exit_) DECLARE_STAT_ENTER(_exit_)
 
 #define STAT_ACT_START
 #define STAT_ACT_END                                                           \
