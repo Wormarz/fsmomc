@@ -72,3 +72,20 @@ TEST_CASE("adding rules")
         REQUIRE(add_trans_rule(sm, "state1", "state2") != 0);
     }
 }
+
+TEST_CASE("adding rules with abstract state")
+{
+    ALLOC_SM_INS(buf, 10);
+    REQUIRE(init_state_machine((struct state_machine *)buf, sizeof(buf), 10) ==
+            0);
+    struct state_machine *sm = (struct state_machine *)buf;
+    REQUIRE(add_state(sm, "state1", worker1, NULL) == 0);
+    REQUIRE(add_state(sm, "abs-st", NULL, NULL) == 0);
+    REQUIRE(add_substate(sm, "abs-st", "state2", worker2, NULL) == 0);
+
+    SECTION("Test 1 - Add a valid transition rule with a abstract state")
+    {
+        REQUIRE(add_trans_rule(sm, "state1", "abs-st") == 0);
+        REQUIRE(add_trans_rule(sm, "state2", "state1") == 0);
+    }
+}
