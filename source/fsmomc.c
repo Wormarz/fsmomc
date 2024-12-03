@@ -66,6 +66,10 @@ int add_state(struct state_machine *sm, const char *name, actions act,
             }
             return 0;
         }
+        else if (strncmp(sm->states[i].state, name, CONFIG_MAX_SM_NAME_LEN) ==
+                 0) {
+            return -1;
+        }
     }
 
     return -1;
@@ -182,6 +186,7 @@ int state_machine_out(struct state_machine *sm, void *in, void *out)
 void setup_first_state(struct state_machine *sm, const char *name)
 {
     assert((sm->cur_stat = stat_lookup(sm, name)) != NULL);
+    sm->cur_stat->act ? 0 : assert((sm->cur_stat = sm->cur_stat->sub) != NULL);
 }
 
 struct working_state *trans_stat(struct state_machine *sm,
