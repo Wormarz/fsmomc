@@ -73,7 +73,7 @@ TEST_CASE("adding rules")
     }
 }
 
-TEST_CASE("adding rules with abstract state")
+TEST_CASE("adding rules with pseudo state")
 {
     ALLOC_SM_INS(buf, 10);
     REQUIRE(init_state_machine((struct state_machine *)buf, sizeof(buf), 10) ==
@@ -83,9 +83,14 @@ TEST_CASE("adding rules with abstract state")
     REQUIRE(add_state(sm, "abs-st", NULL, NULL) == 0);
     REQUIRE(add_substate(sm, "abs-st", "state2", worker2, NULL) == 0);
 
-    SECTION("Test 1 - Add a valid transition rule with a abstract state")
+    SECTION("Test 1 - Add a valid transition rule with a pseudo state")
     {
         REQUIRE(add_trans_rule(sm, "state1", "abs-st") == 0);
         REQUIRE(add_trans_rule(sm, "state2", "state1") == 0);
+    }
+
+    SECTION("Test 2 - pseudo state can not be a source state")
+    {
+        REQUIRE(add_trans_rule(sm, "abs-st", "state1") != 0);
     }
 }
