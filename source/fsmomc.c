@@ -66,8 +66,7 @@ int add_state(struct state_machine *sm, const char *name, actions act,
             }
             return 0;
         }
-        else if (strncmp(sm->states[i].state, name, CONFIG_MAX_SM_NAME_LEN) ==
-                 0) {
+        else if (!strncmp(sm->states[i].state, name, CONFIG_MAX_SM_NAME_LEN)) {
             return -1;
         }
     }
