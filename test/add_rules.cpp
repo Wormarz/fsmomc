@@ -81,16 +81,22 @@ TEST_CASE("adding rules with pseudo state")
     struct state_machine *sm = (struct state_machine *)buf;
     REQUIRE(add_state(sm, "state1", worker1, NULL) == 0);
     REQUIRE(add_state(sm, "abs-st", NULL, NULL) == 0);
-    REQUIRE(add_substate(sm, "abs-st", "state2", worker2, NULL) == 0);
 
     SECTION("Test 1 - Add a valid transition rule with a pseudo state")
     {
+        REQUIRE(add_substate(sm, "abs-st", "state2", worker2, NULL) == 0);
         REQUIRE(add_trans_rule(sm, "state1", "abs-st") == 0);
         REQUIRE(add_trans_rule(sm, "state2", "state1") == 0);
     }
 
     SECTION("Test 2 - pseudo state can not be a source state")
     {
+        REQUIRE(add_substate(sm, "abs-st", "state2", worker2, NULL) == 0);
         REQUIRE(add_trans_rule(sm, "abs-st", "state1") != 0);
+    }
+
+    SECTION("Test 3 - pseudo state has no association with concrete sub-state")
+    {
+        REQUIRE(add_trans_rule(sm, "state1", "abs-st") != 0);
     }
 }

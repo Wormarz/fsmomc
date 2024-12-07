@@ -125,8 +125,11 @@ int add_trans_rule(struct state_machine *sm, const char *from, const char *to)
     fstat = stat_lookup(sm, from);
     tostat = stat_lookup(sm, to);
 
-    /* Check fstat->act, for pseudo state can not be a source state. */
-    if (fstat == NULL || tostat == NULL || fstat->act == NULL) {
+    if (fstat == NULL || tostat == NULL ||
+        /* Check fstat->act, for pseudo state can not be a source state. */
+        fstat->act == NULL ||
+        /* Make sure if pseudo state has association with concrete sub-state. */
+        tostat->sub == NULL) {
         return -1;
     }
 
