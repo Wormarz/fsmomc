@@ -46,6 +46,16 @@ int init_state_machine(struct state_machine *sm, uint32_t buf_zs,
     return 0;
 }
 
+int deinit_state_machine(struct state_machine *sm)
+{
+    if (sm == NULL) {
+        return -1;
+    }
+
+    memset(sm, 0, sizeof(struct working_state) * sm->stat_nums + sizeof(*sm));
+    return 0;
+}
+
 int add_state(struct state_machine *sm, const char *name, actions act,
               void (*init)(struct working_state *))
 {
@@ -71,11 +81,6 @@ int add_state(struct state_machine *sm, const char *name, actions act,
         }
     }
 
-    return -1;
-}
-
-int del_state(const char *name)
-{ /* TO-DO */
     return -1;
 }
 
@@ -105,11 +110,6 @@ int add_substate(struct state_machine *sm, const char *parent, const char *sub,
         }
     }
 
-    return -1;
-}
-
-int del_substate(const char *parent, const char *sub)
-{ /* TO-DO */
     return -1;
 }
 

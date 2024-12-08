@@ -76,12 +76,11 @@ struct state_machine
 
 int init_state_machine(struct state_machine *sm, uint32_t buf_zs,
                        uint32_t st_nums);
+int deinit_state_machine(struct state_machine *sm);
 int add_state(struct state_machine *sm, const char *name, actions act,
               void (*init)(struct working_state *));
-int del_state(const char *name);
 int add_substate(struct state_machine *sm, const char *parent, const char *sub,
                  actions act, void (*init)(struct working_state *));
-int del_substate(const char *parent, const char *sub);
 int add_trans_rule(struct state_machine *sm, const char *from, const char *to);
 struct working_state *trans_stat(struct state_machine *sm,
                                  struct working_state *from, const char *to);
