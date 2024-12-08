@@ -34,3 +34,38 @@ TEST_CASE("initlize state machine instance")
         REQUIRE(init_state_machine((struct state_machine *)buf, 0, 0) != 0);
     }
 }
+
+TEST_CASE("deinitlize state machine instance")
+{
+    ALLOC_SM_INS(buf, 10);
+    struct state_machine *sm = (struct state_machine *)buf;
+    REQUIRE(init_state_machine(sm, sizeof(buf), 10) == 0);
+    REQUIRE(sm->stat_nums == 10);
+
+    SECTION("Test Case 1 - Normal Deinitialization")
+    {
+        bool is_all_zero = true;
+
+        for (int i = 0; i < sm->stat_nums; ++i) {
+            std::string str = "state";
+            str += std::to_string(i);
+            REQUIRE(add_state(sm, str.c_str(), NULL, NULL) == 0);
+        }
+
+        REQUIRE(deinit_state_machine(sm) == 0);
+
+        for (int i = 0; i < sizeof(buf); i++) {
+            if (buf[i] != 0) {
+                is_all_zero = false;
+                break;
+            }
+        }
+
+        REQUIRE(is_all_zero);
+    }
+
+    SECTION("Test Case 2 - NULL State Machine")
+    {
+        REQUIRE(deinit_state_machine(NULL) != 0);
+    }
+}
