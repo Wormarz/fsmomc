@@ -12,7 +12,7 @@ endif()
 
 set(CTEST_MEMORYCHECK_TYPE "AddressSanitizer")
 set(CTEST_MEMORYCHECK_SANITIZER_OPTIONS "verbosity=1:symbolize=1:abort_on_error=1:detect_leaks=1")
-set(TEST_PARTS version.cpp init.cpp add_state.cpp add_rules.cpp tans_state.cpp)
+set(TEST_PARTS version.cpp init.cpp add_state.cpp add_rules.cpp tans_state.cpp actions.cpp)
 
 add_executable(fsmomc_tests test_main.cpp ${TEST_PARTS})
 target_compile_options(fsmomc_tests
