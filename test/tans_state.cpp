@@ -33,4 +33,9 @@ TEST_CASE("states transition")
         state_machine_loop(sm);
         REQUIRE_THAT(sm->cur_stat->state, Equals("state1"));
     }
+
+    SECTION("Test Case 2 - Transition to not existing state")
+    {
+        REQUIRE(trans_stat(sm, sm->cur_stat, "state3") == NULL);
+    }
 }
