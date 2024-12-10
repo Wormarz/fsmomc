@@ -1,5 +1,14 @@
 #include "catch.hpp"
 #include "fsmomc.h"
+#include <cstdlib>
+#include <ctime>
+
+int getRand(int min, int max)
+{
+    return (rand() % (max - min + 1)) + min;
+}
+
+static int8_t trans_count;
 
 static DECLARE_STAT_ENTER(stat1_enter)
 {
@@ -11,6 +20,7 @@ static DECLARE_STAT_ENTER(stat1_enter)
 static DECLARE_STAT_ACTIONS(worker1)
 {
     STAT_ACT_START;
+    ++trans_count;
     CHG_STATE("state2");
     STAT_ACT_END;
 }
@@ -30,6 +40,7 @@ static DECLARE_STAT_EXIT(stat2_exit)
 static DECLARE_STAT_ACTIONS(worker2)
 {
     STAT_ACT_START;
+    ++trans_count;
     CHG_STATE("state1");
     STAT_ACT_END;
 }
@@ -67,5 +78,21 @@ TEST_CASE("state action")
         bool is_exit = false;
         state_machine_out(sm, NULL, &is_exit);
         REQUIRE(is_exit == true);
+    }
+
+    SECTION("Test Case 3 - input/transition action")
+    {
+        REQUIRE(add_state(sm, "state1", worker1, NULL) == 0);
+        REQUIRE(add_state(sm, "state2", worker2, NULL) == 0);
+        REQUIRE(add_trans_rule(sm, "state1", "state2") == 0);
+        REQUIRE(add_trans_rule(sm, "state2", "state1") == 0);
+
+        srand(time(0));
+        trans_count = 0;
+        int count = getRand(1, 100);
+        for (size_t i = 0; i < count; i++) {
+            state_machine_loop(sm);
+        }
+        REQUIRE(trans_count == count);
     }
 }
