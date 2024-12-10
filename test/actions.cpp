@@ -3,7 +3,7 @@
 
 static DECLARE_STAT_ENTER(stat1_enter)
 {
-    bool *data = (bool *)in;
+    bool *data = (bool *)out;
     (*data) = true;
     STAT_OUT_READY();
 }
@@ -22,7 +22,7 @@ void worker1_init(working_state *state)
 
 static DECLARE_STAT_EXIT(stat2_exit)
 {
-    bool *data = (bool *)in;
+    bool *data = (bool *)out;
     (*data) = true;
     STAT_OUT_READY();
 }
@@ -53,7 +53,7 @@ TEST_CASE("state action")
         REQUIRE(add_trans_rule(sm, "state2", "state1") == 0);
 
         bool is_entered = false;
-        state_machine_out(sm, &is_entered, &is_entered);
+        state_machine_out(sm, NULL, &is_entered);
         REQUIRE(is_entered == true);
     }
 
@@ -65,7 +65,7 @@ TEST_CASE("state action")
         REQUIRE(add_trans_rule(sm, "state2", "state1") == 0);
 
         bool is_exit = false;
-        state_machine_out(sm, &is_exit, &is_exit);
+        state_machine_out(sm, NULL, &is_exit);
         REQUIRE(is_exit == true);
     }
 }
