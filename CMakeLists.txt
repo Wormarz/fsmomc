@@ -18,12 +18,12 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/include
     PRIVATE
-        ${PROJECT_BINARY_DIR}/include
+        ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 configure_file (
-    "${PROJECT_SOURCE_DIR}/include/autoconf.h.in"
-    "${PROJECT_BINARY_DIR}/include/autoconf.h"
+    "${CMAKE_CURRENT_LIST_DIR}/include/autoconf.h.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/include/autoconf.h"
 )
 
 # enable_testing()
