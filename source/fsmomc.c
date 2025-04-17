@@ -1,5 +1,4 @@
 #include "fsmomc.h"
-#include "version.h"
 #include <string.h>
 
 const char version[] = "Ver: " FSMOMC_VERSION_STR; /* version */

@@ -3,7 +3,7 @@
 
 TEST_CASE("get version of the library")
 {
-#include "version.h"
+#include "autoconf.h"
 
     SECTION("hex version check")
     {
