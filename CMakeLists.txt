@@ -22,8 +22,8 @@ target_include_directories(${PROJECT_NAME}
 )
 
 configure_file (
-    "${CMAKE_CURRENT_LIST_DIR}/include/autoconf.h.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/include/autoconf.h"
+    "${CMAKE_CURRENT_LIST_DIR}/include/autogen.h.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/include/autogen.h"
 )
 
 # enable_testing()

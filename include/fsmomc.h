@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include "autoconf.h"
+#include "autogen.h"
 #include <assert.h>
 #include <stdint.h>
 
